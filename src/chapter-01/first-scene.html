@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>基本的脚手架</title>
+        <!--线上环境使用three.min.js。开发环境使用three.js，便于调试-->
+        <script src="../../lib/three.js"></script>
+        <style>
+            body{
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="WebGL-output"></div>
+        <script>
+            // 如何创建场景并渲染三维对象
+            function init() {
+                var scene = new THREE.Scene();
+                var rate = window.innerWidth / window.innerHeight
+                var camera = new THREE.PerspectiveCamera(45, rate, 0.1, 1000)
+
+                var renderer = new THREE.WebGLRenderer()
+
+                renderer.setClearColor(0xEEEEEE)
+                renderer.setSize(window.innerWidth, window.innerHeight)
+
+                var axes = new THREE.AxisHelper(20)
+
+                scene.add(axes)
+
+                var planeGeometry = new THREE.PlaneGeometry(60, 20, 1, 1)
+
+                var planeMaterial = new THREE.MeshBasicMaterial({ color: 0xcccccc })
+
+
+            }
+            window.onload = init
+        </script>
+    </body>
+</html>
