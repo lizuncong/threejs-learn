@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>光源及阴影</title>
+        <!--线上环境使用three.min.js。开发环境使用three.js，便于调试-->
+        <script src="../../lib/three.js"></script>
+        <style>
+            body{
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="WebGL-output"></div>
+        <script>
+            // 例2：添加光源及阴影
+            // 定义光源
+            // 不同的材质对光源的反应是不一样的。
+            // 基本材质(THREE.MeshBasicMaterial)不会对
+            // 光源有任何反应，基本材质只会使用指定的颜色来渲染物体。
+            // 因此如果需要物体对光源有反应，必须使用能对光源做出反应的材质。
+            // Three.js中的材质MeshLambertMaterial和MeshPhongMaterial在渲染时会对光源产生反应。
+            //  由于渲染阴影需要耗费大量的计算资源，所以默认情况下Three.js中是不会渲染阴影的。
+            // 通过renderer.shadowMapEnabled = true只是告诉渲染器需要阴影效果。同时如果需要给物体设置
+            // 阴影，则还要明确指定哪个物体投射阴影、哪个物体接受阴影。
+            // 最后还需要定义能够产生阴影的光源。因为并不是所有的光源都能够产生阴影。
+            function init() {
+              var scene = new THREE.Scene();
+
+
+              var rate = window.innerWidth / window.innerHeight
+              var camera = new THREE.PerspectiveCamera(45, rate, 0.1, 1000)
+
+              var renderer = new THREE.WebGLRenderer()
+
+              renderer.setClearColor(0xEEEEEE)
+              renderer.setSize(window.innerWidth, window.innerHeight)
+              // 显示阴影，设置这个属性只是告诉渲染器需要阴影而已
+              renderer.shadowMapEnabled = true
+              var axes = new THREE.AxesHelper(20)
+
+              scene.add(axes)
+
+              var planeGeometry = new THREE.PlaneGeometry(60, 20)
+              var planeMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc })
+
+              var plane = new THREE.Mesh(planeGeometry, planeMaterial)
+
+              plane.rotation.x = -0.5 * Math.PI
+              plane.position.x = 15
+              plane.position.y = 0
+              plane.position.z = 0
+              plane.receiveShadow = true
+              scene.add(plane)
+
+              var cubeGeometry = new THREE.BoxGeometry(4,4,4)
+              var cubeMaterial = new THREE.MeshLambertMaterial({
+                color: 0xff0000,
+              })
+
+              var cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
+              cube.position.x = -4
+              cube.position.y = 3
+              cube.position.z = 0
+              cube.castShadow = true
+              scene.add(cube)
+
+              var sphereGeometry = new THREE.SphereGeometry(4, 20, 20)
+              var sphereMaterial = new THREE.MeshLambertMaterial({
+                color: 0x7777ff,
+              })
+              var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
+
+              sphere.position.x = 20
+              sphere.position.y = 4
+              sphere.position.z = 2
+              sphere.castShadow = true
+              scene.add(sphere)
+
+              // 定义光源
+              // 不同的材质对光源的反应是不一样的。
+              // 基本材质(THREE.MeshBasicMaterial)不会对
+              // 光源有任何反应，基本材质只会使用指定的颜色来渲染物体。
+              var spotLight = new THREE.SpotLight(0xffffff)
+              spotLight.position.set(-40,60,-10)
+              spotLight.castShadow = true
+              scene.add(spotLight)
+
+              camera.position.x = -30
+              camera.position.y = 40
+              camera.position.z = 30
+              camera.lookAt(scene.position)
+
+              document.getElementById('WebGL-output')
+                .appendChild(renderer.domElement)
+              renderer.render(scene, camera)
+            }
+            window.onload = init
+        </script>
+    </body>
+</html>
