@@ -17,10 +17,14 @@
             // 例1：一个简单的场景，添加坐标轴，立方体，球体，平面等物体。
             // 场景是一个容器， 主要用于保存、跟踪所要渲染的物体和使用的光源
             // 创建一个场景，并添加几个物体和摄像机
+            // 渲染场景的时候，THREE.Camera对象会自动地被Three.js添加进来。但是我们手动添加它会
+            // 是一个更好的实践，尤其是当你需要处理多个摄像机的时候。
             function init() {
                 // 创建场景
                 var scene = new THREE.Scene();
 
+                // 给场景添加雾化效果
+                scene.fog = new THREE.Fog(0xffffff, 0.015, 100)
 
                 var rate = window.innerWidth / window.innerHeight
                 // 创建摄像机对象，摄像机对象决定了能够在场景看到什么
