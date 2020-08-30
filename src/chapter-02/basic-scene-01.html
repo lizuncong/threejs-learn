@@ -51,7 +51,7 @@
                 // 创建渲染器
                 var renderer = new THREE.WebGLRenderer()
 
-                renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0))
+                renderer.setClearColor(new THREE.Color(0xEEEEEE))
                 renderer.setSize(window.innerWidth, window.innerHeight)
                 renderer.shadowMap.enabled = true
 
@@ -70,9 +70,19 @@
 
                 scene.add(plane)
 
-                // 创建环境光源
+                // 创建环境光源，环境光会均匀的照亮场景中的所有物体
+                // 环境光不能用来投影，因为它没有方向
                 var ambientLight = new THREE.AmbientLight(0x0c0c0c)
                 scene.add(ambientLight)
+
+
+                // 添加点光源
+                var spotLight = new THREE.SpotLight(0xffffff)
+                spotLight.position.set(-40, 60, -10)
+                spotLight.castShadow = true
+                scene.add(spotLight)
+
+
 
                 document.getElementById('WebGL-output').appendChild(renderer.domElement)
 
@@ -111,13 +121,29 @@
                 }
 
                 var gui = new dat.GUI()
-                gui.add(controls, 'guiRotationSpeed', 0, 0.5)
-                gui.add(controls, 'guiAddCube')
-                gui.add(controls, 'guiRemoveCube')
-                gui.add(controls, 'guiOutputObjects')
-                gui.add(controls, 'guiNumberOfObjects').listen()
+                gui.add(controls, 'rotationSpeed', 0, 0.5)
+                gui.add(controls, 'addCube')
+                gui.add(controls, 'removeCube')
+                gui.add(controls, 'outputObjects')
+                gui.add(controls, 'numberOfObjects').listen()
 
 
+                function render() {
+                  stats.update()
+
+                  scene.traverse(function (e) {
+                    if(e instanceof THREE.Mesh && e !== plane){
+                      e.rotation.x += controls.rotationSpeed
+                      e.rotation.y += controls.rotationSpeed
+                      e.rotation.z += controls.rotationSpeed
+                    }
+                  })
+
+                  requestAnimationFrame(render)
+                  renderer.render(scene, camera)
+                }
+
+                render()
             }
             window.onload = init
         </script>
