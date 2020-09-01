@@ -4,6 +4,9 @@
         <title>Example 02.01 - Basic Scene</title>
         <script type="text/javascript" src="../../lib/three.js"></script>
         <script type="text/javascript" src="../../lib/utils/SceneUtils.js"></script>
+        <script type="text/javascript" src="../../lib/geometries/ConvexGeometry.js"></script>
+        <script type="text/javascript" src="../../lib/geometries/ParametricGeometries.js"></script>
+        <script type="text/javascript" src="../../lib/math/ConvexHull.js"></script>
         <script type="text/javascript" src="../../lib/stats.min.js"></script>
         <script type="text/javascript" src="../../lib/dat.gui.min.js"></script>
         <style>
@@ -63,6 +66,9 @@
 
                 scene.add(plane)
 
+                var axesHelper = new THREE.AxesHelper(20)
+                scene.add(axesHelper)
+
                 var ambientLight = new THREE.AmbientLight(0x090909)
                 scene.add(ambientLight)
 
@@ -81,6 +87,36 @@
                     geoms.push(new THREE.SphereGeometry(2))
 
                     geoms.push(new THREE.IcosahedronBufferGeometry(4))
+
+                    geoms.push(new THREE.ConvexGeometry([
+                        new THREE.Vector3(2, 2, 2),
+                        new THREE.Vector3(2, 2, -2),
+                        new THREE.Vector3(-2, 2, -2),
+                        new THREE.Vector3(-2, 2, 2),
+                        new THREE.Vector3(2, -2, 2),
+                        new THREE.Vector3(2, -2, -2),
+                        new THREE.Vector3(-2, -2, -2),
+                        new THREE.Vector3(-2, -2, 2)
+                    ]))
+
+                    var pts = []
+                    var detail = 0.1
+                    var radius = 3
+                    for (var angle = 0.0; angle < Math.PI; angle += detail){
+                        pts.push(new THREE.Vector3(Math.cos(angle) * radius, 0, Math.sin(angle) * radius))
+                    }
+
+                    geoms.push(new THREE.LatheGeometry(pts, 12))
+
+                    geoms.push(new THREE.OctahedronGeometry(3))
+
+                    geoms.push(new THREE.ParametricGeometry(THREE.ParametricGeometries.mobius3d, 20, 10))
+
+                    geoms.push(new THREE.TetrahedronGeometry(3))
+
+                    geoms.push(new THREE.TorusGeometry(3, 1, 10, 10))
+
+                    geoms.push(new THREE.TorusKnotGeometry(3, 0.5, 50, 20))
 
                     var j = 0
                     for(var i = 0; i < geoms.length; i++){
