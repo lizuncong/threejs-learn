@@ -47,7 +47,7 @@
                 camera.position.x = -20;
                 camera.position.y = 25
                 camera.position.z = 20
-                camera.lookAt(new THREE.Vector3(5, 0, 0))
+                camera.lookAt(scene.position)
 
                 var renderer = new THREE.WebGLRenderer()
 
@@ -115,7 +115,13 @@
                         wireframe: true
                     })
                 ]
-
+                // SceneUtils.createMultiMaterialObject方法创建的不是一个THREE.Mesh
+                // 对象实例，而是为materials数组中每个指定的材质创建一个实例。并把这些实例存放在一个组里。
+                // 可以像使用场景中的对象那样使用这个组，如添加网格、按名称获取对象等。
+                // mesh变量包含两个子对象：基于两个不同材质(MeshLambertMaterial和MeshBasicMaterial)
+                // 创建而出的两个网格对象。
+                // createMultiMaterialObject方法创建了一个多材质对象，这个对象不是一个网格对象
+                // 而是网格组。其中每个网格的几何体都是一样的，不同的只是使用的材质不一样。
                 var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, materials)
                 mesh.children.forEach(function(e){
                     e.castShadow = true
